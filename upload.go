@@ -347,16 +347,23 @@ func generateBarename() string {
 }
 
 func generateJSONresponse(upload Upload, r *http.Request) []byte {
+	htmlURL := getSiteURL(r) + upload.Filename
+	directURL := getSiteURL(r) + Config.selifPath + upload.Filename
+	displayURL := htmlURL
+	if displayRawLink(upload.Metadata.Mimetype) {
+		displayURL = directURL
+	}
 	js, _ := json.Marshal(map[string]string{
-		"url":        getSiteURL(r) + upload.Filename,
-		"direct_url": getSiteURL(r) + Config.selifPath + upload.Filename,
-		"filename":   upload.Filename,
-		"delete_key": upload.Metadata.DeleteKey,
-		"access_key": upload.Metadata.AccessKey,
-		"expiry":     strconv.FormatInt(upload.Metadata.Expiry.Unix(), 10),
-		"size":       strconv.FormatInt(upload.Metadata.Size, 10),
-		"mimetype":   upload.Metadata.Mimetype,
-		"sha256sum":  upload.Metadata.Sha256sum,
+		"url":         htmlURL,
+		"direct_url":  directURL,
+		"display_url": displayURL,
+		"filename":    upload.Filename,
+		"delete_key":  upload.Metadata.DeleteKey,
+		"access_key":  upload.Metadata.AccessKey,
+		"expiry":      strconv.FormatInt(upload.Metadata.Expiry.Unix(), 10),
+		"size":        strconv.FormatInt(upload.Metadata.Size, 10),
+		"mimetype":    upload.Metadata.Mimetype,
+		"sha256sum":   upload.Metadata.Sha256sum,
 	})
 
 	return js

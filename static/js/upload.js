@@ -69,9 +69,9 @@ Dropzone.options.dropzone = {
         file.fileActions.removeChild(file.progressElement);
 
         var fileLabelLink = document.createElement("a");
-        fileLabelLink.href = resp.url;
+        fileLabelLink.href = resp.display_url;
         fileLabelLink.target = "_blank";
-        fileLabelLink.innerHTML = resp.url;
+        fileLabelLink.innerHTML = resp.display_url;
         file.fileLabel.innerHTML = "";
         file.fileLabelLink = fileLabelLink;
         file.fileLabel.appendChild(fileLabelLink);

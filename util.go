@@ -1,5 +1,13 @@
 package main
 
+import (
+	"strings"
+)
+
+func displayRawLink(mimetype string) bool {
+	return strings.HasPrefix(mimetype, "image/")
+}
+
 func extensionToHlLang(extension string) (hlExt string) {
 	hlExt, exists := extensionToHl[extension]
 	if !exists {

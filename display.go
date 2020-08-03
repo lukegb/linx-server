@@ -32,13 +32,21 @@ func fileDisplayHandler(c web.C, w http.ResponseWriter, r *http.Request, fileNam
 	extension := strings.TrimPrefix(filepath.Ext(fileName), ".")
 
 	if strings.EqualFold("application/json", r.Header.Get("Accept")) {
+		htmlURL := getSiteURL(r) + fileName
+		directURL := getSiteURL(r) + Config.selifPath + fileName
+		displayURL := htmlURL
+		if displayRawLink(metadata.Mimetype) {
+			displayURL = directURL
+		}
 		js, _ := json.Marshal(map[string]string{
-			"filename":   fileName,
-			"direct_url": getSiteURL(r) + Config.selifPath + fileName,
-			"expiry":     strconv.FormatInt(metadata.Expiry.Unix(), 10),
-			"size":       strconv.FormatInt(metadata.Size, 10),
-			"mimetype":   metadata.Mimetype,
-			"sha256sum":  metadata.Sha256sum,
+			"filename":    fileName,
+			"url":         htmlURL,
+			"direct_url":  directURL,
+			"display_url": displayURL,
+			"expiry":      strconv.FormatInt(metadata.Expiry.Unix(), 10),
+			"size":        strconv.FormatInt(metadata.Size, 10),
+			"mimetype":    metadata.Mimetype,
+			"sha256sum":   metadata.Sha256sum,
 		})
 		w.Write(js)
 		return
